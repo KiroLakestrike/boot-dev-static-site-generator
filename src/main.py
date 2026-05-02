@@ -1,20 +1,26 @@
-from textnode import TextNode, TextType
+import os
+import shutil
+
+from copystatic import copy_static
+from generatepages import generate_pages_recursive
+
+dir_path_static = "./static"
+dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
+
 
 def main():
-    node1 = TextNode("Hello, World!", TextType.PLAIN)
-    node2 = TextNode("This is a bold text.", TextType.BOLD)
-    node3 = TextNode("This is an italic text.", TextType.ITALIC)
-    node4 = TextNode("This is a code text.", TextType.CODE)
-    node5 = TextNode("This is a link.", TextType.LINK)
-    node5.url = "https://www.example.com"
-    node6 = TextNode("This is an image.", TextType.IMAGE)
-    node6.url = "https://www.example.com/image.png"
+    print("Deleting public directory...")
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
 
-    print(node1)
-    print(node2)
-    print(node3)
-    print(node4)
-    print(node5)
-    print(node6)
+    print("Copying static files to public directory...")
+    copy_static(dir_path_static, dir_path_public)
+
+    print("Generating content...")
+    generate_pages_recursive(dir_path_content, template_path, dir_path_public)
+
+
 
 main()
